@@ -21,7 +21,7 @@ scheduler(app);
 (async () => {
 
     try{
-        await app.start(process.env.PORT || 3000);
+        await app.start(8888);
         console.log('⚡️ Bolt app is running!');
     }
     catch(error){

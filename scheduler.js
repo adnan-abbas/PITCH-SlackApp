@@ -4,7 +4,7 @@ const users = [
   {
     //Adnan
     userId: 'U06BE7BQRQS', // Replace with the actual user ID
-    morningTime: '11:30', // 9 AM
+    morningTime: '12:20', // 9 AM
     eveningTime: '16:38' // 4 PM
   },
   {

@@ -1,33 +1,37 @@
 const { analyzeConversation } = require('./conversation_analyzer');
+//const { observeConversation } = require('./conversation_observer');
+
 require('dotenv').config();
 const { OpenAI } = require('openai');
+const { users } = require('../users/users_info');
 
 // Setup OpenAI configuration
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
+
 goalsArray = [
   'Help a worker to revisit what they did during the day and help them notice patterns.',
 ]
 
 goal = goalsArray[Math.floor(Math.random() * goalsArray.length)];
-// Placeholder for the system prompt
-var systemPrompt = ``;
 var messages = [];
 
-const buildSystemPrompt = async (userId) => {
+const initializeEveningBot = async (userId) => {
+//empty messages from the previous day's conversation
+  console.log("initializing evening bot for user:", userId);
 
+  messages = [];
   const todayDate = new Date().toISOString().split('T')[0];
   const morningConversation = await analyzeConversation(userId, todayDate);
-  console.log("Summary of morning conversation: ", morningConversation)
+  //console.log("Summary of morning conversation: ", morningConversation)
 /**
  * TODO: 
  * The morning bot should have the context of the last three questions asked and should rotate the question if its the same.
- * The bot should allow the user to have the conversation that they want to lead by sticking to the higher-level goals but changing the focused goal of the conversation.
  * The morning convo summary should be sent to the bot when initiating the convo?
  * 
  */
 
-  systemPrompt = `
-  You are an emapathetic reflection companion who helps users to reflect about their day's activities to improve their productivity and well-being by checking in with them at the end of their day. 
+  const systemPrompt = `
+  You are an emapathetic reflection coach who helps users to reflect about their day's activities to improve their productivity and well-being by checking in with them at the end of their day. 
   
   Suppose the user had a morning conversation with you. The conversation is encapsulated by triple quotes backticks below:
   """
@@ -38,27 +42,30 @@ const buildSystemPrompt = async (userId) => {
   1. Follow up with the users about actionable items or tasks mentioned
   2. Lead an emotionally-aware conversation with the user by asking reflective questions about their day that can help them to articulate their underlying needs and goals and increase their motivation.
   
-  Make sure to keep the question short and easy to answer as much as possible. Your output should be within a sentence of 20 words.
+  Make sure to keep the question short and easy to answer as much as possible. 
   If the morning conversation is empty, focus on job # 2.
   I will tip you $20 if you are perfect and end the conversation gracefully, and I will fine you $40 if you do not adhere to the morning conversation context.
   `;
-
-  console.log("evening system promtp:", systemPrompt);
   messages.push({ role: 'system', content: systemPrompt });
+  users[userId].messageCounter = 0;
 };
 
 // Function to get a response from the AI based on the user input and conversation history
 const getEveningAIResponse = async (userId, userInput) => {
-  //only build system prompt first time
-  if (messages.length === 0){
-    try {
-      await buildSystemPrompt(userId);
-    } catch (error) {
-      console.error('Error building system prompt:', error);
-    }
-  }
 
-  userInput+= ". Note: If the conversation is on the stage where the user has reflected about their day, consider ending the conversation."
+  // observeConversation(messages);
+  var userPrompt = "";
+
+  if (users[userId].messageCounter > 3){
+    userPrompt = ". End the conversation gracefully now"
+  }
+  else{
+    userPrompt = ". Note: If the conversation is on the stage where the user has reflected about their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+  }
+  
+  userInput+=userPrompt;
+  console.log("counter: ", users[userId].messageCounter, userPrompt
+  )
   messages.push({ role: 'user', content: userInput });
 
   try {
@@ -70,9 +77,9 @@ const getEveningAIResponse = async (userId, userInput) => {
 
     const aiMessage = response.choices[0];
     const aiMessageContent = aiMessage.message.content;
-   // console.log("the ai message recvd is: ", aiMessage)
     messages.push({ role: 'assistant', content: aiMessageContent });
-
+    users[userId].messageCounter += 1;
+    console.log(users[userId].messageCounter);
     return aiMessageContent;
   }
   catch (error) {
@@ -84,7 +91,8 @@ const getEveningAIResponse = async (userId, userInput) => {
 };
 
 module.exports = {
-  getEveningAIResponse
+  getEveningAIResponse,
+  initializeEveningBot
 }
 
 

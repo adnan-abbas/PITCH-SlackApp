@@ -54,5 +54,97 @@
         }
       ]
     }
+  ],
+  "2024-07-04": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.End the conversation gracefully now."
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! Have you planned your breaks for today? Have a productive day!"
+        }
+      ]
+    }
+  ],
+  "2024-07-06": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "Please initiate the conversation by asking me a question. Today is the weekend so I dont want to talk about work. Start by a greeting.. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How are you feeling emotionally on this relaxing weekend day?"
+        }
+      ]
+    }
+  ],
+  "2024-07-07": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "Please initiate the conversation by asking me a question. Today is the weekend so I dont want to talk about work. Start by a greeting.. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How are you feeling emotionally on this relaxing weekend day?"
+        }
+      ]
+    }
+  ],
+  "2024-07-08": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How are you feeling emotionally as you start your workday today?"
+        }
+      ]
+    }
+  ],
+  "2024-07-09": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How do you feel about collaborating and delegating tasks today?"
+        },
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How do you plan to manage your time efficiently today?"
+        }
+      ]
+    }
+  ],
+  "2024-07-10": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! What is one thing you are looking forward to today?"
+        }
+      ]
+    }
   ]
 }

@@ -53,9 +53,9 @@ const handleIncomingMessage = async (app) => {
       // Determine if current time is morning or evening
       if (currentTimeInMinutes >= morningTimeInMinutes && currentTimeInMinutes < eveningTimeInMinutes) {
         response = await getMorningAIResponse(userId, userInput);
-        console.log('calling morning bot')
+        //console.log('calling morning bot')
       } else {
-        console.log('calling evening bot')
+        //console.log('calling evening bot')
         response = await getEveningAIResponse(userId, userInput);
       }
 

@@ -92,5 +92,121 @@
         }
       ]
     }
+  ],
+  "2024-07-04": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence upto 10 words."
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How would you like to plan your breaks today?"
+        }
+      ]
+    }
+  ],
+  "2024-07-06": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "Please initiate the conversation by asking me a question. Today is the weekend so I dont want to talk about work. Start by a greeting.. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How are you feeling emotionally on this relaxing weekend day?"
+        }
+      ]
+    }
+  ],
+  "2024-07-07": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "Please initiate the conversation by asking me a question. Today is the weekend so I dont want to talk about work. Start by a greeting.. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How are you feeling emotionally on this lovely weekend day?"
+        },
+        {
+          "role": "user",
+          "content": "Im feeling eery. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Eery feelings can be unsettling. What might help you feel more at ease?"
+        },
+        {
+          "role": "user",
+          "content": "More sleep. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Getting more sleep is a good plan. Ready to relax and rest now?"
+        },
+        {
+          "role": "user",
+          "content": "No i can't sleep more. End the conversation gracefully now."
+        },
+        {
+          "role": "assistant",
+          "content": "Understood. Take care of yourself. Feel free to chat anytime."
+        },
+        {
+          "role": "user",
+          "content": "Okaay. End the conversation gracefully now."
+        },
+        {
+          "role": "assistant",
+          "content": "Alright then. Have a wonderful day ahead. Feel free to reach out if needed."
+        }
+      ]
+    }
+  ],
+  "2024-07-08": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.. End the conversation gracefully now."
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How are you feeling emotionally as you start your workday? Have a great day!"
+        }
+      ]
+    }
+  ],
+  "2024-07-09": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! Do you understand the importance of collaboration and delegation today?"
+        }
+      ]
+    }
+  ],
+  "2024-07-10": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.. Note: If the conversation is on the stage where the user has planned the goal in their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How can you prioritize breaks in your schedule today?"
+        }
+      ]
+    }
   ]
 }

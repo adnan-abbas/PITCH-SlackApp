@@ -15487,3 +15487,41 @@ Overall i have to remind myself to relax properly today so im ready for the next
 }
 2024-08-27T15:24:00.937Z [info]: my constructed thing {"is_broken":true,"sentence_1":"Jogging might help due to the movement, but it's not a guaranteed solution. 🏃‍♂️","sentence_2":"If the clogging persists, please consult a healthcare professional. Can I assist you with anything else?"}
 2024-08-27T15:24:00.937Z [info]: parsed sentence in index,js [object Object]
+2024-08-27T16:52:00.225Z [info]: day of week is:  2
+2024-08-27T16:52:00.262Z [info]: initializing morning bot for user: Alifya
+2024-08-27T16:52:00.262Z [info]: BEFORE shuffle ["help this worker externalize their plan on one task that they want to finish today.","help this worker block a time for deep work in a distraction-free environment.","help this worker identify potential tasks that they can either delegate or defer.","help this worker incorporate regular physical activity into their daily routine to improve physical health and reduce stress.","help this worker be mindful to manage stress and enhance mental clarity","help this worker be mindful to manage stress and enhance mental clarity","help this worker schedule and take good breaks to refresh their mind, prevent burnout, and/or improve their concentration.","help this worker identify obstacles in the realization of their plans and think about alternate strategies if the obstacle comes in the way of their plan","help this worker be mindful to manage stress and enhance mental clarity","help this worker set boundaries between work and personal life to ensure they have time for relaxation and personal activities."]
+2024-08-27T16:52:00.262Z [info]: AFTER shuffle help this worker be mindful to manage stress and enhance mental clarity,help this worker be mindful to manage stress and enhance mental clarity,help this worker set boundaries between work and personal life to ensure they have time for relaxation and personal activities.,help this worker block a time for deep work in a distraction-free environment.,help this worker identify obstacles in the realization of their plans and think about alternate strategies if the obstacle comes in the way of their plan,help this worker incorporate regular physical activity into their daily routine to improve physical health and reduce stress.,help this worker externalize their plan on one task that they want to finish today.,help this worker be mindful to manage stress and enhance mental clarity,help this worker identify potential tasks that they can either delegate or defer.,help this worker schedule and take good breaks to refresh their mind, prevent burnout, and/or improve their concentration.
+2024-08-27T16:52:00.262Z [info]: index is  4
+2024-08-27T16:52:00.263Z [info]: Current Day: Tuesday
+2024-08-27T16:52:00.263Z [info]: date today is luxon: 2024-08-27
+2024-08-27T16:52:00.263Z [info]: Morning System Prompt is:  
+  You are a productivity/well-being coach who helps workers plan their day through conversation by asking questions about their day.
+  You check in with workers in the morning by asking a question.
+  Suppose the goal of today's conversation is to  help this worker be mindful to manage stress and enhance mental clarity.
+  You have to help workers make their day's plan concrete based on the goal.
+  Make sure to keep your response short and keep the question short and easy to answer as much as possible.
+  Your conversation should be appropriate with the time and day. For instance, if it is weekend you do not suggest work. Today is Tuesday. The time right now is: 12:52:00.262-04:00
+  Each response should be roughly within 30 words.
+  Use emojis appropriately.
+  Do not assume that the user thought about something (e.g.,  “their core values” ) instead lead the conversation so user doesn't have to put effort.
+  Rather than making the conversation continue, find a way to ask a question that can wrap up the conversation.
+  Do not end the conversation without asking any questions at all.   
+  
+2024-08-27T16:52:00.347Z [info]: messageCounter:  0
+2024-08-27T16:52:00.347Z [info]: userInput:  I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.
+2024-08-27T16:52:05.455Z [info]: Response from the sentence breaker:  {
+  "is_broken": true,
+  "sentence_1": "Good afternoon! 🌞",
+  "sentence_2": "What's the most important task you'd like to accomplish today to keep your day stress-free and clear-minded?"
+}
+2024-08-27T16:52:05.455Z [info]: length of orignial response 127
+2024-08-27T16:52:05.455Z [info]: the parsed json [object Object]
+2024-08-27T16:52:05.455Z [info]: length of both sentences 126
+2024-08-27T16:52:05.456Z [info]: adding new messages [{"role":"assistant","content":"Good afternoon! 🌞 What's the most important task you'd like to accomplish today to keep your day stress-free and clear-minded?"}]
+2024-08-27T16:52:05.506Z [info]: response from bot:  {
+  "is_broken": true,
+  "sentence_1": "Good afternoon! 🌞",
+  "sentence_2": "What's the most important task you'd like to accomplish today to keep your day stress-free and clear-minded?"
+}
+2024-08-27T16:52:05.506Z [info]: my constructed thing {"is_broken":true,"sentence_1":"Good afternoon! 🌞","sentence_2":"What's the most important task you'd like to accomplish today to keep your day stress-free and clear-minded?"}
+2024-08-27T16:52:05.506Z [info]: in the schelder [object Object]

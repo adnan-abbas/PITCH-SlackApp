@@ -2,110 +2,222 @@ require('dotenv').config();
 const { OpenAI } = require('openai');
 const fs = require('fs');
 const path = require('path');
-const { users } = require ('../users/users_info');
+const { breakSentence } = require('./breakSentence');
+const { addConversation, updateUser, getUser, getConversation } = require('../database/db_models');
+const { DateTime } = require('luxon');
+const _ = require('lodash');
+
+
 // Setup OpenAI configuration
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
-const { observeMorningConversation } = require('./conversation_observer_morning')
-var messages = [];
-var conversation = [];
-var goal = ""
-const initializeMorningBot = async (userId) =>{
-  //empty messages from the previous day's conversation
+const { observeMorningConversation } = require('./conversation_observer_morning');
 
-  console.log("initializing morning bot for user:", userId);
-  messages = [];
-  goalsArray = [
-    'Help this worker externalize their plan on one task that they want to finish today.',
-    'Help this worker find available time for them to focus without distraction.',
-    'Help this worker differentiate an urgent task from an important task by asking about their todays to-do list', 
-    'Help this worker understand the importance of collaboration and delegation among the daily tasks.',
-    'Help this worker imagine the order of tasks in which they work on a particular day.',
-    'Help this worker externalize what their plan is for the day to evaluate if their plan is realistic or not.',
-    'Help this worker reflect on whether their daily plan matches their core values.',
-    'Help this worker think about ways to manage time efficiently within a daily plan.',
-    'Help this worker be aware of their emotional state and understand how that can impact their day on a particular day.',
-    'Help this worker find time for breaks in their day.',
-    'Help this worker have a positive beginning of the day.',
-    'Help this worker find time for an active lifestyle during the day at work.',
-    'Help this worker identify and regulate the stress that they may have for the day.',
-    'Suggest this worker to reward themselves when they accomplish their goals with a few tangible options.',
-  ]
-  goal = goalsArray[Math.floor(Math.random() * goalsArray.length)];
-  // Placeholder for the system prompt
-  
+var messages_dict = {};
+var conversation_dict = {};
+var user_counters = {};
+var goal = "";
+const initializeMorningBot = async (userId) =>{
+  const user = await getUser(userId);
+  console.log("initializing morning bot for user:", user.userName);
+  if (!messages_dict[userId] || !conversation_dict[userId] || !user_counters[userId]) {
+    console.log("created message list for user")
+    messages_dict[userId] = [];
+    conversation_dict[userId] = [];
+    user_counters[userId] = 0;
+  }
+  messages_dict[userId] = [];  //empty messages from the previous day's conversation
+  conversation_dict[userId] = []; // empty the ongoing conversation DS
+  user_counters[userId] = 0;
+  var removedGoal = "";
+  let { morningGoals, morningUsedGoals } = user;
+  if (morningGoals.length === 0) {
+    console.log("No morning goals left for this worker...Replacing goals from the used Goals");
+    await updateUser(userId,{
+      morningGoals: morningUsedGoals,
+      morningUsedGoals: [],
+    });
+    morningGoals = morningUsedGoals;
+    morningUsedGoals = [];
+  }
+
+  console.log("BEFORE shuffle", JSON.stringify(morningGoals));
+  morningShuffledGoals = _.shuffle(morningGoals);
+  console.log("AFTER shuffle", morningShuffledGoals);
+  removedGoal = morningShuffledGoals.shift(); // Removes the element at index 0
+  let index = morningGoals.indexOf(removedGoal);
+  console.log("index is ", index);
+  if (index !== -1) {
+    morningGoals.splice(index, 1);
+  }
+
+  // Shuffle and remove the first goal from the goals array
+  goal = removedGoal;
+  // Add the removed goal to the usedGoals array
+  const updatedUsedGoals = [...morningUsedGoals, removedGoal];
+  // Update the user's document in the database
   /**
    * TODO: 
    * The morning bot should have the context of the last three questions asked and should rotate the question if its the same.
    * The bot should allow the user to have the conversation that they want to lead by sticking to the higher-level goals but changing the focused goal of the conversation.
    */
+  let currentDateTime = DateTime.now().setZone('America/New_York');
+  let todayDate = currentDateTime.toISODate();
+  const currentTime = currentDateTime.toISOTime();
+  const currentDay = currentDateTime.toFormat('cccc');
+// Print the current day
+  console.log("Current Day:", currentDay); // Example output: Monday
+  console.log("date today is luxon:", todayDate);
   const systemPrompt = `
-  You are a productivity/well-being coach who coaches workers to plan their day through conversation by asking questions about their day.
-  You check-in with workers in the morning everyday by asking a different question everyday.
-  Suppose the goal of today's conversation is ${goal}.
-  You have to help workers externalize their thoughts with respect to the goal by asking questions based on the goal which is: ${goal}. 
-  Make sure to keep the question short and easy to answer as much as possible.
-  Your output should be a sentence within 10-15 words.
-  Say one sentence for each message and don’t exceed two.
+  You are a productivity/well-being coach who helps workers plan their day through conversation by asking questions about their day.
+  You check in with workers in the morning by asking a question.
+  Suppose the goal of today's conversation is to  ${removedGoal}.
+  You have to help workers make their day's plan concrete based on the goal.
+  Make sure to keep your response short and keep the question short and easy to answer as much as possible.
+  Your conversation should be appropriate with the time and day. For instance, if it is weekend you do not suggest work. Today is ${currentDay}. The time right now is: ${currentTime}
+  Each response should be roughly within 30 words.
   Use emojis appropriately.
-  Make sure that you do one thing at a time. Either ask a question or acknowledge the user.
-  I will tip you $20 if you are perfect and end the conversation gracefully, and I will fine you $40 if you give verbose responses.
+  Do not assume that the user thought about something (e.g.,  “their core values” ) instead lead the conversation so user doesn't have to put effort.
+  Rather than making the conversation continue, find a way to ask a question that can wrap up the conversation.
+  Do not end the conversation without asking any questions at all.   
   `;
 
-  console.log("System Prompt is: ", systemPrompt);
-  messages.push({ role: 'system', content: systemPrompt });
-  users[userId].messageCounter = 0;
+  console.log("Morning System Prompt is: ", systemPrompt);
+  messages_dict[userId].push({ role: 'system', content: systemPrompt });
+  await updateUser(userId, { 
+    morningGoals: morningGoals, 
+    morningUsedGoals: updatedUsedGoals,
+    messageCounter: 0,
+  } 
+);
 }
 // Function to get a response from the AI based on the user input and conversation history
 const getMorningAIResponse = async (userId, userInput) => {
-  
-  if (!userInput.includes('I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.')){
-    conversation.push({ role: 'user', content: userInput });
-    const currentConvo = conversation.filter(message => message.role === 'user' || message.role === 'assistant').map(message => `${message.role === 'user' ? 'User' : 'Assistant'}: ${message.content}`)
-    .join('\n');
-    const response = await observeMorningConversation(currentConvo, goal);
+  const user = await getUser(userId);
+  var messageCounter = user_counters[userId];
+  //We do not want to run the observer on the very first message that intiates the conversation
+  var state = "";
 
-
-    console.log("current convo in morning_bot", currentConvo);
-    console.log("response from observer", response);
-    console.log("rational from observer", response["rationale"]);
-
-
-
+  if (!userInput.includes('I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.') && !userInput.includes('Please initiate the conversation by asking me a question. Today is the weekend so I dont want to talk about work. Start by a greeting.')){
+    //conversation is a list we use to send ongoing conversation progress to the observer
+    conversation_dict[userId].push({ role: 'user', content: userInput });
   }
   var userPrompt = "";
-
-  const state = "";
-
-  if (state === "Externalization"){
-    userPrompt = "Consider helping the worker to incorporate activity related to the goal in their day.";
+  /**
+   * State should only be externalized
+   * first 3-4 messages does not qualify for state analysis
+   */
+  if (messageCounter > 3){
+    const currentConvo = conversation_dict[userId].filter(message => message.role === 'user' || message.role === 'assistant').map(message => `${message.role === 'user' ? 'User' : 'Assistant'}: ${message.content}`)
+    .join('\n');
+    const response = await observeMorningConversation(currentConvo, goal);
+    let parsedResponse = "";
+    try{
+      parsedResponse = JSON.parse(response);
+    }
+    catch (error){
+      console.error(`Error parsing the JSON object from morningConversationObserver:`, error);
+      return "Oops! Something went wrong, please report Adnan!";
+    }
+    state = parsedResponse["state"];
+    var engagement_score = parsedResponse["engagement_score"];
+    console.log("rationale from observer", parsedResponse["rationale"]);
+    console.log( "state: ", state)
+    console.log("score: ", engagement_score);
+    if (state === "Continue"){
+      userPrompt = "";
+    }
+    else if (state === "End" || engagement_score < 2){
+      userPrompt = "Consider a smooth (NOT abrupt) end to the conversation on this topic by: greeting the user or letting them know you are available for any further assistance or any other technique";
+    }
   }
-  else if (state === "Incoporation"){
-    userPrompt =  "Consider ending the conversation since the user has talked about their plans.";
+  if (userPrompt!== ""){
+    userInput+=" "+"["+userPrompt+"]";
   }
-  userInput+=userPrompt;
-  messages.push({ role: 'user', content: userInput });
-
+  console.log("messageCounter: ", messageCounter)
+  console.log("userInput: ", userInput);
+  messages_dict[userId].push({ role: 'user', content: userInput });
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: messages,
-      max_tokens: 150,
+      model: 'gpt-4',
+      messages: messages_dict[userId],
+      max_tokens: 500,
+      temperature: 0.2,
     });
 
     const aiMessage = response.choices[0];
     const aiMessageContent = aiMessage.message.content;
-    messages.push({ role: 'assistant', content: aiMessageContent });
-    conversation.push({ role: 'assistant', content: aiMessageContent });
-    saveConversation(userId, messages);
-    users[userId].messageCounter+=1;
-    return aiMessageContent;
+    const brokenSentence = await breakSentence(aiMessageContent);
+    let parsedBrokenSentence = "";
+    let is_broken = false;
+    let sentence_1 = "";
+    let sentence_2 = "";
+    //Fall back mechanism for JSON parsing to minimize AI unpredictability.
+    try{
+      parsedBrokenSentence = JSON.parse(brokenSentence);
+      is_broken = true;
+    }
+    catch (error){
+      console.error(`Error parsing the JSON object from breakSentence:`, error);
+      is_broken = false;
+      sentence_1 = aiMessageContent;
+      sentence_2 = "";
+    }
+    //length checks for further AI unpredictability.
+    if (is_broken){
+      console.log("length of orignial response", aiMessageContent.length);
+      console.log("the parsed json", parsedBrokenSentence);
+      const sentenceOne = parsedBrokenSentence["sentence_1"];
+      const sentenceTwo = parsedBrokenSentence["sentence_2"];
+      const lengthOfBothSentences = sentenceOne.length + sentenceTwo.length;
+      console.log("length of both sentences", lengthOfBothSentences);
+      const buffer = 5;
+      if ((lengthOfBothSentences+buffer) < aiMessageContent.length){
+        is_broken = false;
+        sentence_1 = aiMessageContent;
+        sentence_2 = "";
+      }
+      else{
+        is_broken = true;
+        sentence_1 = parsedBrokenSentence["sentence_1"];
+        sentence_2 = parsedBrokenSentence["sentence_2"];
+      }
+    }
+    messages_dict[userId].push({ role: 'assistant', content: aiMessageContent });
+    conversation_dict[userId].push({ role: 'assistant', content: aiMessageContent });
+    saveConversation(userId, conversation_dict[userId]);
+    await saveConversationToDB(userId,user.userName, conversation_dict[userId]);
+    user_counters[userId]+=1;
+    console.log("response from bot: ", brokenSentence);
+    const aiResponse = {
+      is_broken: is_broken,
+      sentence_1: sentence_1,
+      sentence_2: sentence_2
+    };
+    console.log("my constructed thing", JSON.stringify(aiResponse));
+    return aiResponse;
   }
   catch (error) {
       console.error(`Error getting response from OpenAI:`, error);
-      throw error;
+      return "Oops! something went wrong, please report Adnan!";
+      //throw error;
   }
-
-
+};
+const saveConversationToDB = async (userId,userName, messages) => {
+  const currentDate = DateTime.now().setZone('America/New_York').toISODate();
+  
+  // Extract the latest user and assistant messages
+  let newMessages = [];
+  const latestUserMessage = messages.filter(message => message.role === 'user').pop();
+  const latestAssistantMessage = messages.filter(message => message.role === 'assistant').pop();
+  if (latestUserMessage){
+    newMessages.push(latestUserMessage);
+  }
+  if (latestAssistantMessage){
+    newMessages.push(latestAssistantMessage);
+  }
+  // Save the conversation to the database
+  await addConversation(userId,userName, currentDate, newMessages, 'morning');
+  // Save the conversation to the database
 };
 const saveConversation = (userId, messages) => {
   const conversationPath = path.join(__dirname, `..`, `conversations`, `${userId}.json`);

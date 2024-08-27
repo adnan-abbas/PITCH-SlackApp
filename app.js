@@ -7,7 +7,43 @@ require ('dotenv').config();
 const { App } = require('@slack/bolt');
 const { registerListeners } = require('./listeners');
 const { scheduler } = require('./users/scheduler');
-const {analyzeConversation} = require('./openai/conversation_analyzer');
+const fs = require('fs');
+const path = require('path');
+const users = require('./users/users_info');
+
+
+
+const winston = require('winston');
+
+// Create logs directory if it doesn't exist
+const logDir = path.join(__dirname, 'logs');
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir);
+}
+
+// Setup winston logger
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(({ timestamp, level, message }) => {
+      return `${timestamp} [${level}]: ${message}`;
+    })
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: path.join(logDir, 'app.log') })
+  ]
+});
+
+// Override console.log globally
+console.log = function(...args) {
+  logger.info(args.join(' '));
+};
+
+console.error = function(...args) {
+  logger.error(args.join(' '));
+};
 const app = new App({
     signingSecret: process.env.SIGNING_SECRET,
     token: process.env.SLACKBOT_TOKEN,
@@ -22,8 +58,6 @@ scheduler(app);
     try{
       await app.start(8888);
       console.log('⚡️ Bolt app is running!');
-      // const resp = analyzeConversation('UO6BE7BQRQS', '2024-07-01')
-      // console.log(resp);
     }
     catch(error){
         console.error("Unable to start App", error);

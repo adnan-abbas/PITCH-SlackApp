@@ -208,5 +208,163 @@
         }
       ]
     }
+  ],
+  "2024-07-13": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "Please initiate the conversation by asking me a question. Today is the weekend so I dont want to talk about work. Start by a greeting.Consider helping this worker to incorporate activity related to the goal in their day. Your response should either be an acknowledgement or a question. Remember to keep your output within 10-15 words and keep in mind the conversation context so far."
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! What activities bring you joy and align with your values today? 🌞"
+        }
+      ]
+    }
+  ],
+  "2024-07-14": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "Please initiate the conversation by asking me a question. Today is the weekend so I dont want to talk about work. Start by a greeting.Consider ending the conversation if you have asked more than 3 questions from the beginning."
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 How do you plan to spend your day today?"
+        }
+      ]
+    }
+  ],
+  "2024-07-15": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.Consider ending the conversation if you have asked more than 3 questions from the beginning."
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How does your day's plan align with your core values? 🌟"
+        }
+      ]
+    }
+  ],
+  "2024-07-16": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.Consider ending the conversation if you have asked more than 3 questions from the beginning."
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! Do you feel today's plan aligns with your core values? 🌟"
+        }
+      ]
+    }
+  ],
+  "2024-07-17": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting.Consider helping this worker to incorporate activity related to the goal in their day. Your response should either be an acknowledgement or a question. Remember to keep your output within 10-15 words and keep in mind the conversation context so far."
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! How are you planning to align your tasks with your core values today?"
+        }
+      ]
+    }
+  ],
+  "2024-07-18": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting."
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! Have you scheduled any breaks into your day yet?"
+        }
+      ]
+    }
+  ],
+  "2024-07-19": [
+    {
+      "Morning": [
+        {
+          "role": "user",
+          "content": "I am a worker beginning my workday. Please initiate the conversation by asking me a question. Start by a greeting."
+        },
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 How can we incorporate physical activity into your workday today?"
+        }
+      ]
+    }
+  ],
+  "2024-07-24": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! What tasks do you have on your to-do list today? 🌟"
+        }
+      ]
+    }
+  ],
+  "2024-07-30": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 What's the most important task you need to accomplish today?"
+        }
+      ]
+    }
+  ],
+  "2024-07-31": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 How are you feeling emotionally as you start your day?"
+        }
+      ]
+    }
+  ],
+  "2024-08-01": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 What's one thing that's causing you stress today?"
+        }
+      ]
+    }
+  ],
+  "2024-08-02": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 😊 Could you share your to-do list for today?"
+        }
+      ]
+    }
+  ],
+  "2024-08-05": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 😊 What's the most important task you want to accomplish today to keep your mind clear and stress-free?"
+        }
+      ]
+    }
   ]
 }

@@ -1,48 +1,38 @@
 const fs = require('fs');
 const path = require('path');
 const { OpenAI } = require('openai');
+const { analyzeConversation } = require('./conversation_analyzer');
 
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
-
 // Function to observe the conversation
-const observeEveningConversation = async (messages) => {
-  const systemPrompt = `
-You are a conversation analyzer. You are given a conversation between a user and an assistant in the JSON format. This conversation took place in the user's morning before they started their work day.
-Your task is to analyze the conversation based on the following criteria:
-1. Identify the main topics discussed.
-2. Determine the emotional tone of the conversation.
-3. Highlight any actionable items or tasks mentioned.
+const observeEveningConversation = async (conversation, morningSummary) => {
 
 
-
-
-Reflection of time spent can reduce absolute time on unimportant activities
-as indicated by the user studies [1, 34]. Recent research suggests that the psychological benefits of
-disclosure and reflection with an agent are similar to reflection with another human [18]. Moreover,
-reflecting on one’s plans at the end of one’s day can help psychologically detach from work and
-support a healthy work-life balance [23, 37, 40]. However, users need a nudge to reflect upon their
-activities as reflection does not come naturally to humans [13]. Encouraging reflection on deeper
-levels, it is useful to ask contextual questions from users and doing this exercise with an agent can
-allow one to see more than one could possibly see alone [13]. Therefore, we need to implement a
-conversation storage and retrieval module that can ask personalized reflective questions to users at
-the end of their day. We will create prompts that take in the stored morning conversation’s context
-to generate personalized reflection questions that can help a worker understand the time spent
-during the day. Similar to the morning check-in, we also want to tailor the timing of the evening
-reflection according to the user’s schedule so it is easier for users to adopt the habit.
-
-
-
-In the Label phase, ChaCha follows up the key event and
-helps the user label their associated emotions. The activity in this
-phase was inspired and informed by emotion coaching [31] and
-emotion card activities
-
-explore actionable solutions
-
-
-Your output should be around 200 words.
-  `;
+  const systemPrompt = `You are an expert conversation analyzer that determines the state of a conversation history and decides whether a conversation should be continued or ended.
+  The context of the conversation provided to you is that it is happening after the user had a conversation with the assistant in the morning and now this assistant is checking up with the user in the evening.
+  The MORNING CONVERSATION SUMMARY is encapsulated by delimiters below. This is just for your reference. Actual conversation to analyze is given later.
+  <<<
+  ${morningSummary}
+  >>>
+  Now, conversations can be in 2 states with each state having sub-goals defined below:
+  1. Continue: The user seems engaged in the conversation or the user has not talked about anything from the morning conversation
+  2. End: The user has talked about the morning conversation or the user is unengaged
+  Your job is to analyze conversation between a gpt assistant and a user who is reflecting on their day.
+  You are assigned with the task to analyze this EVENING CONVERSATION that a worker is having with a gpt assistant encapsulated by delimiters below:
+  <<< 
+  ${conversation}
+  >>>
+  Examine this conversation and determine its state. Your output should be in JSON format:
+  (1) state: Continue or End
+  (2) rationale: Describe your rationale on how you decided about the state and score.
+  (3) engagement_score: a number from 0-5
+  Ensure that the output is a valid JSON string. Don't include the word json in output. Output should be in JSON string like this so I can call JSON.parse on the response you provide
+  {
+   state: ,
+   rationale: ,
+   engagement_score: 
+  }`;
 
   const messages = [
     { role: 'system', content: systemPrompt },
@@ -50,16 +40,18 @@ Your output should be around 200 words.
 
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4',
       messages: messages,
       max_tokens: 500,
+      temperature:0,
     });
 
     const aiMessage = response.choices[0];
+    console.log("Evening observer response: ", aiMessage.message.content);
     return aiMessage.message.content;
   } catch (error) {
     console.error(`Error getting response from OpenAI:`, error);
-    throw error;
+    return "Oops! something went wrong, please report Adnan!";
   }
 };
 

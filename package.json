@@ -12,9 +12,14 @@
   "license": "ISC",
   "dependencies": {
     "@slack/bolt": "^3.18.0",
+    "@slack/rtm-api": "^7.0.0",
     "dotenv": "^16.4.5",
     "langchain": "^0.2.5",
+    "lodash": "^4.17.21",
+    "luxon": "^3.5.0",
+    "mongodb": "^6.8.0",
     "node-cron": "^3.0.3",
-    "openai": "^4.52.0"
+    "openai": "^4.52.0",
+    "winston": "^3.13.1"
   }
 }

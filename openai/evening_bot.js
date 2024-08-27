@@ -1,110 +1,236 @@
 const { analyzeConversation } = require('./conversation_analyzer');
-//const { observeConversation } = require('./conversation_observer');
-
+const { observeEveningConversation } = require('./conversation_observer_evening');
+const { breakSentence } = require('./breakSentence');
 require('dotenv').config();
 const { OpenAI } = require('openai');
-const { users } = require('../users/users_info');
+const { getConversation, updateUser, getUser, addConversation } = require('../database/db_models');
+const { DateTime } = require('luxon');
+const _ = require('lodash');
 
 // Setup OpenAI configuration
 const openai = new OpenAI(process.env.OPENAI_API_KEY);
 
-goalsArray = [
-  'Help a worker to revisit what they did during the day and help them notice patterns.',
-]
-
-goal = goalsArray[Math.floor(Math.random() * goalsArray.length)];
-var messages = [];
+var messages_dict = {};
+var conversation_dict = {};
+var morningConversation = "";
+var user_counters = {};
 
 const initializeEveningBot = async (userId) => {
-//empty messages from the previous day's conversation
-  console.log("initializing evening bot for user:", userId);
+  console.log("initialzing evening bot");
 
-  messages = [];
-  const todayDate = new Date().toISOString().split('T')[0];
-  const morningConversation = await analyzeConversation(userId, todayDate);
+  //if the user ID does not exist in the dictionary, add the user
+  const user = await getUser(userId);
+  if (!messages_dict[userId] || !conversation_dict[userId] || !user_counters[userId]) {
+    messages_dict[userId] = [];
+    conversation_dict[userId] = [];
+    user_counters[userId] = 0;
+  }
+  //empty messages from the previous day's conversation
+  messages_dict[userId] = [];
+  conversation_dict[userId] = [];
+  let systemPrompt = "";
+  let currentDateTime = DateTime.now().setZone('America/New_York');
+  let todayDate = currentDateTime.toISODate();
+  const currentTime = currentDateTime.toISOTime();
+  const currentDay = currentDateTime.toFormat('cccc');
+// Print the current day
+  console.log("Current Day:", currentTime); // Example output: Monday
+  console.log("date today is luxon:", todayDate);
+
+  morningConversation = await getConversation(userId, todayDate,'morning');
+  morningConversation = JSON.stringify(morningConversation);
   //console.log("Summary of morning conversation: ", morningConversation)
-/**
- * TODO: 
- * The morning bot should have the context of the last three questions asked and should rotate the question if its the same.
- * The morning convo summary should be sent to the bot when initiating the convo?
- * 
- */
+  let { eveningGoals, eveningUsedGoals } = user;
+  var removedGoal = "";
+  // Check if there is at least one goal to remove
+  if (eveningGoals.length === 0) {
+    console.log("no goals left in evening. replacing with used goals");
+    await updateUser(userId,{
+      eveningGoals: eveningUsedGoals,
+      eveningUsedGoals: [],
+    });
+    eveningGoals = eveningUsedGoals;
+    eveningUsedGoals = [];
+  }
+    // Shuffle and remove the first goal from the goals array
+  const eveningShuffledGoals = _.shuffle(eveningGoals);
+  removedGoal = eveningShuffledGoals.shift(); // Removes the element at index 0
+  let index = eveningGoals.indexOf(removedGoal);
+  console.log("index is ", index);
+  if (index !== -1) {
+    eveningGoals.splice(index, 1);
+  }
+  // Add the removed goal to the usedGoals array
+  const updatedUsedGoals = [...eveningUsedGoals, removedGoal];
+  console.log("morning convo is", morningConversation);
+  if (morningConversation === undefined || morningConversation === []){
+    /*
+     * If no conversation for today check if yesterday's convo has been checked in? 
+     * In case of new user, there would be no yesterday's convo
+     */
+    systemPrompt = `You are a productivity/well-being coach whose goal is to ${removedGoal}. You check in with this user at the end of their day for their self-reflection.
+    There are a few rules:
+  - Your greetings should be appropriate with the time and day. For instance, if it is weekend tomorrow you do not suggest work. Today is ${currentDay}. The time right now is: ${currentTime}
+  - Within the context of the morning conversation, ${removedGoal}.
+  - Make sure to keep the question short and easy to answer as much as possible.
+  - Each question and response should be roughly within 30 words.
+  - Use emojis appropriately.
+  - Rather than making the conversation continue, find a way to ask a question that can wrap up the conversation.`;
 
-  const systemPrompt = `
-  You are an emapathetic reflection coach who helps users to reflect about their day's activities to improve their productivity and well-being by checking in with them at the end of their day. 
-  
-  Suppose the user had a morning conversation with you. The conversation is encapsulated by triple quotes backticks below:
-  """
-  ${morningConversation}
-  """
-  
-  Now, your job is to:
-  1. Follow up with the users about actionable items or tasks mentioned
-  2. Lead an emotionally-aware conversation with the user by asking reflective questions about their day that can help them to articulate their underlying needs and goals and increase their motivation.
-  
-  Make sure to keep the question short and easy to answer as much as possible. 
-  If the morning conversation is empty, focus on job # 2.
-  I will tip you $20 if you are perfect and end the conversation gracefully, and I will fine you $40 if you do not adhere to the morning conversation context.
-  `;
-  messages.push({ role: 'system', content: systemPrompt });
-  users[userId].messageCounter = 0;
+  } else {
+    systemPrompt = `You are a productivity/well-being coach whose goal is to ${removedGoal}. You check in with this user at the end of their day for their self-reflection.
+    There are a few rules:
+  - Your greetings should be appropriate with the time and day. For instance, if it is weekend tomorrow you do not suggest work. Today is ${currentDay}. The time right now is: ${currentTime}
+  - Your questions should be within the context of the morning conversation and the goal which was: ${removedGoal}.
+  - Make sure to keep the question short and easy to answer as much as possible.
+  - Each question and response should be roughly within 30 words.
+  - Use emojis appropriately.
+  - Rather than making the conversation continue, find a way to ask a question that can wrap up the conversation.
+  The conversation that you had with the worker in the morning is provided below.
+    <<< 
+    ${morningConversation} 
+    >>>`;
+  }
+  messages_dict[userId].push({ role: 'system', content: systemPrompt });
+  await updateUser(userId, { 
+    eveningGoals: eveningGoals, 
+    eveningUsedGoals: updatedUsedGoals,
+    messageCounter: 0,
+  } );
+  user_counters[userId] = 0;
+  console.log("Initialized evening bot for user: ", userId);
+  console.log("System prompt for evening is: ", systemPrompt);
 };
 
 // Function to get a response from the AI based on the user input and conversation history
 const getEveningAIResponse = async (userId, userInput) => {
-
-  // observeConversation(messages);
+  const user = await getUser(userId);
+  var messageCounter = user_counters[userId];
+  if (!userInput.includes('Begin conversation. Start by a greeting.')){
+    //conversation is a list we use to send ongoing conversation progress to the observer
+    conversation_dict[userId].push({ role: 'user', content: userInput });
+  }
   var userPrompt = "";
+  console.log("message counter: ", messageCounter);
 
-  if (users[userId].messageCounter > 3){
-    userPrompt = ". End the conversation gracefully now"
+  //conversation state analysis is after 4 messages
+  if (messageCounter > 3){
+    const currentConvo = conversation_dict[userId].filter(message => message.role === 'user' || message.role === 'assistant').map(message => `${message.role === 'user' ? 'User' : 'Assistant'}: ${message.content}`)
+    .join('\n');
+    const response = await observeEveningConversation(currentConvo, morningConversation);
+    let parsedResponse = "";
+    try{
+      parsedResponse = JSON.parse(response);
+    }
+    catch (error){
+      console.error(`Error parsing the JSON object from morningConversationObserver:`, error);
+      return "Oops! Something went wrong, please report Adnan!";
+    }
+    const state = parsedResponse["state"];
+    const engagement_score = parsedResponse["engagement_score"];
+    console.log("evening convo state ", state);
+    console.log("evening convo score ", engagement_score);    
+    console.log("rationale from observer", parsedResponse["rationale"]);
+    if (state === "Continue"){
+      userPrompt = "";
+    }
+    else if (state === "End" || engagement_score < 2){
+      userPrompt = "Consider a smooth (NOT abrupt) end to the conversation by: greeting the user or letting them know you are available for any further assistance or any other technique";
+    }
   }
-  else{
-    userPrompt = ". Note: If the conversation is on the stage where the user has reflected about their day, consider ending the conversation. Make sure to keep the question short and easy to answer as much as possible. Your output should be a sentence within 10-15 words"
+
+  //Keep the user's emotion in mind before asking the question
+  if (userPrompt!=""){
+    userInput+=" "+"["+userPrompt+"]";
   }
-  
-  userInput+=userPrompt;
-  console.log("counter: ", users[userId].messageCounter, userPrompt
-  )
-  messages.push({ role: 'user', content: userInput });
+  console.log("evening user input is: ", userInput);
+  messages_dict[userId].push({ role: 'user', content: userInput });
 
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: messages,
-      max_tokens: 150,
+      model: 'gpt-4',
+      messages: messages_dict[userId],
+      max_tokens: 500,
     });
 
     const aiMessage = response.choices[0];
     const aiMessageContent = aiMessage.message.content;
-    messages.push({ role: 'assistant', content: aiMessageContent });
-    users[userId].messageCounter += 1;
-    console.log(users[userId].messageCounter);
-    return aiMessageContent;
+    const brokenSentence = await breakSentence(aiMessageContent);
+    let parsedBrokenSentence = "";
+    let is_broken = false;
+    let sentence_1 = "";
+    let sentence_2 = "";
+    //Fall back mechanism for JSON parsing to minimize AI unpredictability.
+    try{
+      parsedBrokenSentence = JSON.parse(brokenSentence);
+      is_broken = true;
+    }
+    catch (error){
+      console.error(`Error parsing the JSON object from breakSentence:`, error);
+      is_broken = false;
+      sentence_1 = aiMessageContent;
+      sentence_2 = "";
+    }
+    //length checks for further AI unpredictability.
+    if (is_broken){
+      console.log("length of orignial evening response", aiMessageContent.length);
+      console.log("the parsed json", parsedBrokenSentence);
+      const sentenceOne = parsedBrokenSentence["sentence_1"];
+      const sentenceTwo = parsedBrokenSentence["sentence_2"];
+      const lengthOfBothSentences = sentenceOne.length + sentenceTwo.length;
+      console.log("length of both sentences", lengthOfBothSentences);
+      const buffer = 5;
+      if ((lengthOfBothSentences+buffer) < aiMessageContent.length){
+        is_broken = false;
+        sentence_1 = aiMessageContent;
+        sentence_2 = "";
+      }
+      else{
+        is_broken = true;
+        sentence_1 = parsedBrokenSentence["sentence_1"];
+        sentence_2 = parsedBrokenSentence["sentence_2"];
+      }
+    }
+    messages_dict[userId].push({ role: 'assistant', content: aiMessageContent });
+    conversation_dict[userId].push({ role: 'assistant', content: aiMessageContent });
+    user_counters[userId] += 1;
+    console.log("response from evening bot: ", brokenSentence);
+    await saveConversationToDB(userId,user.userName, conversation_dict[userId]);
+    const aiResponse = {
+      is_broken: is_broken,
+      sentence_1: sentence_1,
+      sentence_2: sentence_2
+    };
+    console.log("my constructed thing evening", JSON.stringify(aiResponse));
+    return aiResponse;
   }
   catch (error) {
       console.error(`Error getting response from OpenAI:`, error);
-      throw error;
+      return "Oops! something went wrong, please report Adnan!";
+      //throw error;
   }
 
 
 };
 
+const saveConversationToDB = async (userId,userName, messages) => {
+  const currentDate = DateTime.now().setZone('America/New_York').toISODate();
+  
+  // Extract the latest user and assistant messages
+  const latestUserMessage = messages.filter(message => message.role === 'user').pop();
+  const latestAssistantMessage = messages.filter(message => message.role === 'assistant').pop();
+
+  let eveningConversation = [];
+  if (latestUserMessage) {
+    eveningConversation.push(latestUserMessage);
+  }
+  if (latestAssistantMessage) {
+    eveningConversation.push(latestAssistantMessage);
+  }
+  // Save the conversation to the database
+  await addConversation(userId,userName, currentDate, eveningConversation, 'evening');
+};
 module.exports = {
   getEveningAIResponse,
   initializeEveningBot
 }
-
-
-/*
-Below are three stages of reflection marked by three asteriks:
-  ***
-  Stage 1 – Noticing: This stage focuses on building awareness of events and behavior patterns, but without an explicit attempt at explaining or understanding reasons. The stage is aligned with Fleck and Fitzpatrick’s revisiting and reflective description levels where description of an event is provided without further elaboration, explanation, or interpretation. 
-  
-  Stage 2 – Understanding: This stage focuses on analysis of the situation from different perspectives, formulating explanations and observations about the reasons for the things noticed. The stage is aligned with Fleck and Fitzpatrick’s dialogic reflection level where cycles of interpreting and questioning as well consideration of different explanations, hypotheses, and viewpoints are taking place. 
-  
-  Stage 3 – Future Action: In this stage, Understanding leads to development of a new perspective, learning a lesson, or gaining new insights for the future. In terms of Fleck and Fitzpatrick’s levels, this step aligns with levels of transformative reflection and critical reflection where past events are revisited with intent to re-organize them and do something differently in the future. Personal assumptions are challenged, leading to change in practice and understanding. Here also wider implications of actions are taken into consideration.
-  ***
-
-
-  */

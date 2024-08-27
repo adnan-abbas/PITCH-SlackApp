@@ -1,0 +1,402 @@
+{
+  "2024-08-16": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 😊 What's one task you'd like to accomplish today?"
+        },
+        {
+          "role": "user",
+          "content": "Read 5 papers for the literature review"
+        },
+        {
+          "role": "assistant",
+          "content": "Great! 📚 How about breaking it down? Which paper will you start with and when?"
+        },
+        {
+          "role": "user",
+          "content": "I'll start with the papers on chatbots for therapy/wellbeing. I have already started"
+        },
+        {
+          "role": "assistant",
+          "content": "Awesome! 🤖 How long do you plan to spend on each paper to finish all five today?"
+        },
+        {
+          "role": "user",
+          "content": "I'm not really sure how long it will take. Ideally 30min for each, maybe closer to an hour. If I have more time I will read more papers"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like a plan! 🕒 So, if you spend an hour per paper, you'll be done by when?"
+        },
+        {
+          "role": "user",
+          "content": "4:30 or so, assuming I don't do much else"
+        },
+        {
+          "role": "assistant",
+          "content": "Perfect! You've got this. 🙌 Reach out if you need any more help planning your day. Enjoy your reading! 📖"
+        },
+        {
+          "role": "user",
+          "content": "&lt;3"
+        },
+        {
+          "role": "assistant",
+          "content": "Always here to help! Have a productive day! 🌟💼 Feel free to check in anytime."
+        }
+      ]
+    }
+  ],
+  "2024-08-17": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 How would you like to spend your weekend to recharge and prepare for the upcoming week? 🌳📚🎵"
+        }
+      ]
+    }
+  ],
+  "2024-08-18": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 How are you planning to spend your weekend? Any tasks that you could delegate or defer to make it more relaxing? 😊"
+        },
+        {
+          "role": "user",
+          "content": "Well actually I have a few things I want to get done today. It will be nice to have them off my to-do list"
+        },
+        {
+          "role": "assistant",
+          "content": "That's great! 📝 Can you share what these tasks are? Maybe we can identify which ones can be delegated or deferred to lighten your load. 😊"
+        },
+        {
+          "role": "user",
+          "content": "It's mostly personal errands I need to run."
+        },
+        {
+          "role": "assistant",
+          "content": "Understood! 🏃‍♂️ Could you list a few of these errands? We might find some that can be delegated or postponed. 😊"
+        }
+      ]
+    }
+  ],
+  "2024-08-19": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 😊 What's the most important task you plan to tackle today?"
+        },
+        {
+          "role": "user",
+          "content": "The only thing on my To-Do is the literature review. Just grinding through as many papers as I can"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like a big task! 📚 Is this literature review urgent and important for your work today?"
+        },
+        {
+          "role": "user",
+          "content": "Important but not urgent"
+        },
+        {
+          "role": "assistant",
+          "content": "Great! 🌟 Since it's important but not urgent, how many hours do you plan to dedicate to it today?"
+        },
+        {
+          "role": "user",
+          "content": "8, I guess. Unless something else comes up that I need to work on"
+        },
+        {
+          "role": "assistant",
+          "content": "That's a solid plan! 🕗 Just to wrap up, is there anything else you might need to prioritize if it comes up today?"
+        },
+        {
+          "role": "user",
+          "content": "Course registration, maybe, or if I get a new task from my supervisor"
+        },
+        {
+          "role": "assistant",
+          "content": "Understood! 📝 Remember, it's okay to adjust your plan if needed. Have a productive day and feel free to reach out if you need more help! 😊"
+        },
+        {
+          "role": "user",
+          "content": "This is a test"
+        },
+        {
+          "role": "assistant",
+          "content": "Absolutely! I'm here if you need any more assistance. Have a great day! 😊"
+        },
+        {
+          "role": "user",
+          "content": "Hi, do you have a second to chat?"
+        },
+        {
+          "role": "assistant",
+          "content": "Of course! 😊 What's the main task you're planning to work on today?"
+        },
+        {
+          "role": "user",
+          "content": "I'm still working on the literature review"
+        },
+        {
+          "role": "assistant",
+          "content": "Great! 📚 Is this task still important but not urgent for today? Or has its urgency changed?"
+        },
+        {
+          "role": "user",
+          "content": "Yes, still important but not urgent"
+        },
+        {
+          "role": "assistant",
+          "content": "Perfect! 🌟 How many hours are you planning to dedicate to it today?"
+        },
+        {
+          "role": "user",
+          "content": "I finished the literature review and I'm trying to decide what to do with the rest of the day"
+        },
+        {
+          "role": "assistant",
+          "content": "That's great progress! 🎉 Are there any other tasks that might be urgent or important for you to tackle today?"
+        },
+        {
+          "role": "user",
+          "content": "I can't think of any"
+        },
+        {
+          "role": "assistant",
+          "content": "No worries! 😊 Enjoy the rest of your day and remember, I'm here if you need help planning tomorrow's tasks. Have a great day!"
+        },
+        {
+          "role": "user",
+          "content": "Can you still respond to DMs?"
+        },
+        {
+          "role": "assistant",
+          "content": "Absolutely! 😊 What's the main task you're planning to focus on today?"
+        }
+      ]
+    }
+  ],
+  "2024-08-20": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 😊 What's the first task you're planning to tackle today?"
+        },
+        {
+          "role": "user",
+          "content": "lit review again"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like a focused task! 📚 How about scheduling a 15-minute break after every hour of reading to refresh your mind? What do you think?"
+        },
+        {
+          "role": "user",
+          "content": "That sounds like a good idea"
+        },
+        {
+          "role": "assistant",
+          "content": "Great! 🌟 What enjoyable activity could you do during these breaks to help you relax and recharge?"
+        },
+        {
+          "role": "user",
+          "content": "Go for a short walk and maybe meditate. 15 minutes is a bit long, maybe more like 5-10"
+        },
+        {
+          "role": "assistant",
+          "content": "Perfect! 🚶‍♂️🧘‍♂️ A short walk and meditation sound refreshing. So, shall we plan for a 5-10 minute break after every hour of work today?"
+        },
+        {
+          "role": "user",
+          "content": "yep"
+        },
+        {
+          "role": "assistant",
+          "content": "Fantastic! Enjoy your work and breaks today. Remember, I'm here if you need any more assistance. Have a productive day! 😊👍"
+        }
+      ]
+    }
+  ],
+  "2024-08-21": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 How about adding a quick 10-minute workout to kickstart your day? 💪"
+        },
+        {
+          "role": "user",
+          "content": "Thanks, that's a good idea!"
+        },
+        {
+          "role": "assistant",
+          "content": "Great! 🎉 What type of physical activity do you enjoy that you could do for 10 minutes? 🏋️‍♀️🚴‍♂️🧘‍♂️"
+        },
+        {
+          "role": "user",
+          "content": "Any suggestions?"
+        },
+        {
+          "role": "assistant",
+          "content": "Absolutely! How about a brisk walk outside or a quick yoga session? Both can be refreshing and energizing. Which one would you prefer? 🚶‍♂️🧘‍♀️"
+        },
+        {
+          "role": "user",
+          "content": "I'll go for a walk!"
+        },
+        {
+          "role": "assistant",
+          "content": "Fantastic choice! 🚶‍♂️ When do you plan to take this walk during your workday? Before work, during a break, or after work?"
+        },
+        {
+          "role": "user",
+          "content": "Right now"
+        },
+        {
+          "role": "assistant",
+          "content": "Perfect! Enjoy your walk. Remember, I'm here to assist you with your day's plan anytime. Have a productive day! 🌼"
+        }
+      ]
+    }
+  ],
+  "2024-08-22": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 What's the most important task you plan to tackle today?"
+        },
+        {
+          "role": "user",
+          "content": "My main work task is still the lit review, but I also have some errands to run; e.g. I need to go to the post office"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like a busy day! 📚🏃‍♂️ What potential obstacles might come in the way of completing these tasks?"
+        }
+      ]
+    }
+  ],
+  "2024-08-23": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 What's the most important task you're planning to tackle today?"
+        }
+      ]
+    }
+  ],
+  "2024-08-24": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 Since it's the weekend, let's focus on relaxation. What's one activity you enjoy that helps you unwind and clear your mind?"
+        }
+      ]
+    }
+  ],
+  "2024-08-25": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 Since it's Sunday, let's focus on relaxation. What's one activity you enjoy that helps you unwind and clear your mind?"
+        }
+      ]
+    }
+  ],
+  "2024-08-26": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 🌞 What's the first task you plan to tackle today at work?"
+        },
+        {
+          "role": "user",
+          "content": "Take a wild guess"
+        },
+        {
+          "role": "assistant",
+          "content": "Haha, alright! 🤔 Is it responding to emails?"
+        },
+        {
+          "role": "user",
+          "content": "Lit review :face_with_diagonal_mouth:"
+        },
+        {
+          "role": "assistant",
+          "content": "Ah, a literature review! 📚 How much time do you plan to dedicate to this task today?"
+        },
+        {
+          "role": "user",
+          "content": "About 7 hours, I guess"
+        },
+        {
+          "role": "assistant",
+          "content": "That's quite a stretch! 😮 How about scheduling short breaks and some personal time in between to maintain balance? 🧘‍♂️🍵"
+        },
+        {
+          "role": "user",
+          "content": "Yeah, I'll take breaks. I have a meeting too, at 12:30 I think"
+        },
+        {
+          "role": "assistant",
+          "content": "Great! 🙌 After your meeting, how about setting aside some time for a relaxing activity you enjoy? 🎧📖"
+        }
+      ]
+    }
+  ],
+  "2024-08-27": [
+    {
+      "Morning": [
+        {
+          "role": "assistant",
+          "content": "Good morning! 😊 What's the most important task you plan to tackle first today?"
+        },
+        {
+          "role": "user",
+          "content": "I just got back from my first class of the semester; now I need to work on integrating the PITCH playground into the slackbot architecture. I should also work on the lit review a little more (esp. preparing a presentation for it)"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like a busy day! 📚 Which task feels more urgent and important: integrating the PITCH playground or preparing the lit review presentation?"
+        },
+        {
+          "role": "user",
+          "content": "The playground"
+        },
+        {
+          "role": "assistant",
+          "content": "Great! 🎯 How about focusing on the playground task first and then moving on to the lit review presentation? Does that sound like a good plan?"
+        },
+        {
+          "role": "user",
+          "content": "yep"
+        },
+        {
+          "role": "assistant",
+          "content": "Awesome! 🙌 Have a productive day. Remember, it's okay to take short breaks. Check in later?"
+        },
+        {
+          "role": "user",
+          "content": "Sounds good"
+        },
+        {
+          "role": "assistant",
+          "content": "Absolutely! Feel free to reach out if you need any more assistance. Have a fantastic day! 😊👍"
+        }
+      ]
+    }
+  ]
+}
